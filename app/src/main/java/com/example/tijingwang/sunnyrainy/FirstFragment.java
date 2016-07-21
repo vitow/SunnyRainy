@@ -1,6 +1,8 @@
 package com.example.tijingwang.sunnyrainy;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -29,6 +34,7 @@ public class FirstFragment extends Fragment {
     @BindView(R.id.iconImageView) ImageView mIconImageView;
     @BindView(R.id.refreshImageView) ImageView mRefreshImageView;
     @BindView(R.id.locationLabel) TextView mLocationLabel;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -77,7 +83,36 @@ public class FirstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false);
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        ButterKnife.bind(this, view);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        final double latitude = 37.8267;
+        final double longitude = -122.423;
+
+        mRefreshImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getForecast(latitude, longitude);
+            }
+        });
+
+        getForecast(latitude, longitude);
+
+        return view;
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isAvailable = false;
+        if(networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+
+        return isAvailable;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
