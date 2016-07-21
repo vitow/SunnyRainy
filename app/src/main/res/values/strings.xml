@@ -5,4 +5,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_title">Oops sorry</string>
+    <string name="error_message">There was an error, please try again</string>
+    <string name="error_ok_button">OK</string>
 </resources>

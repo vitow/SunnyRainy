@@ -168,11 +168,11 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnF
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "MOOD";
                 case 1:
-                    return "SECTION 2";
+                    return "FIND";
                 case 2:
-                    return "SECTION 3";
+                    return "PROFILE";
             }
             return null;
         }
