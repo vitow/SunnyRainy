@@ -36,6 +36,16 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnF
      */
     private ViewPager mViewPager;
 
+    private static double latitude = 37.8267;
+    private static double longitude = -122.423;
+
+    public static double[] getCurrentlocation(){
+        double[] ll = new double[2];
+        ll[0] = latitude;
+        ll[1] = longitude;
+        return ll;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

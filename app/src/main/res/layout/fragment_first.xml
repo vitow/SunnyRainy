@@ -80,6 +80,88 @@
             android:layout_toEndOf="@+id/temperatureLabel"
             android:src="@drawable/degree"
             android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/temperatureLabel"
+            android:background="#f9f9fc">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                android:paddingLeft="@dimen/fab_margin"
+                android:paddingRight="@dimen/fab_margin"
+                android:paddingBottom="@dimen/fab_margin"
+                android:paddingTop="@dimen/fab_margin"
+                android:background="#f9f9fc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Track"
+                    android:id="@+id/track_text"
+                    android:layout_centerHorizontal="true"
+
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Artist"
+                    android:id="@+id/artist_text"
+                    android:layout_above="@+id/track_text"
+                    android:layout_centerHorizontal="true"
+
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/icon_margin"
+                android:paddingBottom="@dimen/icon_margin"
+                android:paddingLeft="@dimen/icon_margin"
+                android:paddingRight="@dimen/icon_margin"
+                android:background="#d3e8fc"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/play_icon"
+                    android:layout_weight="1"
+                    android:src="@drawable/play_icon" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pause_icon"
+                    android:layout_weight="1"
+                    android:src="@drawable/pause_icon"
+                    android:layout_alignTop="@+id/play_icon"
+                    android:layout_toRightOf="@+id/play_icon"
+                    android:layout_toEndOf="@+id/play_icon" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/skip_icon"
+                    android:layout_weight="1"
+                    android:layout_alignTop="@+id/pause_icon"
+                    android:layout_toRightOf="@+id/pause_icon"
+                    android:layout_toEndOf="@+id/pause_icon"
+                    android:src="@drawable/skip_icon" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
 </FrameLayout>

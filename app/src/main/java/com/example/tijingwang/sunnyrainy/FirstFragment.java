@@ -41,12 +41,18 @@ import okhttp3.Response;
 public class FirstFragment extends Fragment {
 
 
-    @BindView(R.id.timeLabel) TextView mTimeLabel;
-    @BindView(R.id.temperatureLabel) TextView mTemperatureLabel;
-    @BindView(R.id.iconImageView) ImageView mIconImageView;
-    @BindView(R.id.refreshImageView) ImageView mRefreshImageView;
-    @BindView(R.id.locationLabel) TextView mLocationLabel;
-    @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.timeLabel)
+    TextView mTimeLabel;
+    @BindView(R.id.temperatureLabel)
+    TextView mTemperatureLabel;
+    @BindView(R.id.iconImageView)
+    ImageView mIconImageView;
+    @BindView(R.id.refreshImageView)
+    ImageView mRefreshImageView;
+    @BindView(R.id.locationLabel)
+    TextView mLocationLabel;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     private Forecast mForecast;
 
@@ -103,27 +109,24 @@ public class FirstFragment extends Fragment {
         ButterKnife.bind(this, view);
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        final double latitude = 37.8267;
-        final double longitude = -122.423;
 
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getForecast(latitude, longitude);
+                getForecast();
             }
         });
 
-        getForecast(latitude, longitude);
+        getForecast();
 
         return view;
 
     }
 
-    private void getForecast(double latitude, double longitude) {
+    private void getForecast() {
         String apiKey = "ed8d8951a7633c7fda6840f1f0881a96";
         String forecastUrl = "https://api.forecast.io/forecast/" + apiKey +
-                "/" + latitude + "," + longitude;
-
+                "/" + MainActivity.getCurrentlocation()[0] + "," + MainActivity.getCurrentlocation()[1];
 
         if (isNetworkAvailable()) {
             toggleRefresh();
@@ -262,6 +265,8 @@ public class FirstFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
