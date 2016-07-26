@@ -55,7 +55,6 @@ public class FirstFragment extends Fragment {
     ProgressBar mProgressBar;
 
     private Forecast mForecast;
-
     public static final String TAG = MainActivity.class.getSimpleName();
 
 
@@ -69,6 +68,8 @@ public class FirstFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+
 
     public FirstFragment() {
         // Required empty public constructor
@@ -126,7 +127,9 @@ public class FirstFragment extends Fragment {
     private void getForecast() {
         String apiKey = "ed8d8951a7633c7fda6840f1f0881a96";
         String forecastUrl = "https://api.forecast.io/forecast/" + apiKey +
-                "/" + MainActivity.getCurrentlocation()[0] + "," + MainActivity.getCurrentlocation()[1];
+                "/" + MainActivity.latitude + "," + MainActivity.longitude;
+        Log.d("tijingw", String.valueOf(MainActivity.getLatitude()));
+        Log.d("tijingw", String.valueOf(MainActivity.getLongitude()));
 
         if (isNetworkAvailable()) {
             toggleRefresh();
@@ -198,6 +201,9 @@ public class FirstFragment extends Fragment {
         mTimeLabel.setText("At " + current.getFormattedTime() + " it will be");
         Drawable drawable = getResources().getDrawable(current.getIconID());
         mIconImageView.setImageDrawable(drawable);
+
+        String locationName = MainActivity.city + ", " + MainActivity.state;
+        mLocationLabel.setText(locationName);
     }
 
     private Forecast parseForecastDetails(String jsonData) throws JSONException {
