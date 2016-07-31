@@ -1,5 +1,6 @@
 package com.example.tijingwang.sunnyrainy;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -26,12 +27,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.tijingwang.sunnyrainy.fragments.FirstFragment;
+import com.example.tijingwang.sunnyrainy.fragments.SecondFragment;
+import com.example.tijingwang.sunnyrainy.fragments.ThirdFragment;
+import com.example.tijingwang.sunnyrainy.helper.MusicConstant;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.Spotify;
 
 import java.io.IOException;
 import java.util.List;
@@ -358,6 +370,44 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     return "PROFILE";
             }
             return null;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        try {
+            super.onActivityResult(requestCode, resultCode, intent);
+            /**
+             * Check if result comes from the correct activity.
+             */
+            if (requestCode == MusicConstant.REQUEST_CODE) {
+                AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+                if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+                    MusicConstant.AccessToken = response.getAccessToken();
+                    MusicConstant.DEFAULT_LOGIN_STATUS = true;
+                    Toast.makeText(getApplicationContext(), "Log In Successful", Toast.LENGTH_LONG).show();
+
+                    /**
+                     *  Initializing Spotify android player to play Spotify tracks in the app
+                     */
+                    Config playerConfig = new Config(this, response.getAccessToken(), MusicConstant.CLIENT_ID);
+                    MusicConstant.mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
+                        @Override
+                        public void onInitialized(Player player) {
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                        }
+                    });
+
+                }
+            }
+        } catch(Throwable e){
+            e.printStackTrace();
         }
     }
 }

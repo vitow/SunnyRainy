@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.example.tijingwang.sunnyrainy.FirstFragment">
+             tools:context=".fragments.FirstFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -92,32 +92,52 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-
-                android:paddingLeft="@dimen/fab_margin"
-                android:paddingRight="@dimen/fab_margin"
-                android:paddingBottom="@dimen/fab_margin"
-                android:paddingTop="@dimen/fab_margin"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
                 android:background="#f9f9fc">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Track"
-                    android:id="@+id/track_text"
-                    android:layout_centerHorizontal="true"
+                    android:orientation="vertical"
 
-                    android:textSize="18sp" />
+                    android:paddingLeft="@dimen/fab_margin"
+                    android:paddingRight="@dimen/fab_margin"
+                    android:paddingBottom="@dimen/fab_margin"
+                    android:paddingTop="@dimen/fab_margin"
+                    android:background="#f9f9fc">
 
-                <TextView
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:id="@+id/track_text"
+                        android:layout_centerHorizontal="true"
+
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:id="@+id/artist_text"
+                        android:layout_above="@+id/track_text"
+                        android:layout_centerHorizontal="true"
+
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Artist"
-                    android:id="@+id/artist_text"
-                    android:layout_above="@+id/track_text"
-                    android:layout_centerHorizontal="true"
+                    android:paddingBottom="@dimen/fab_margin"
+                    android:paddingTop="@dimen/fab_margin"
+                    android:paddingRight="@dimen/text_margin"
+                    android:id="@+id/login_icon"
+                    android:onClick="loginSpotify"
+                    android:src="@drawable/loginspotify_icon" />
 
-                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -146,13 +166,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/play_icon"
+                            android:onClick="playMusic"
                             android:src="@drawable/play_icon" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/pause_icon"
-
+                            android:onClick="pauseMusic"
                             android:src="@drawable/pause_icon"
                             android:layout_alignTop="@+id/play_icon"
                             android:layout_alignBottom="@+id/play_icon"
@@ -162,7 +183,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/resume_icon"
-
+                            android:onClick="resumeMusic"
                             android:src="@drawable/play_icon"
                             android:layout_alignTop="@+id/play_icon"
                             android:layout_alignBottom="@+id/play_icon"
@@ -183,6 +204,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/skip_icon"
                         android:layout_weight="1"
+                        android:onClick="skipMusic"
                         android:layout_alignTop="@+id/play_icon"
                         android:layout_toRightOf="@+id/play_icon"
                         android:layout_toEndOf="@+id/play_icon"
@@ -194,6 +216,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/like_icon"
                         android:layout_weight="1"
+                        android:onClick="likeMusic"
                         android:layout_alignTop="@+id/skip_icon"
                         android:layout_toRightOf="@+id/skip_icon"
                         android:layout_toEndOf="@+id/skip_icon"

@@ -1,7 +1,10 @@
-package com.example.tijingwang.sunnyrainy;
+package com.example.tijingwang.sunnyrainy.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -11,10 +14,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tijingwang.sunnyrainy.AlertDialogFragment;
+import com.example.tijingwang.sunnyrainy.Current;
+import com.example.tijingwang.sunnyrainy.Forecast;
+import com.example.tijingwang.sunnyrainy.MainActivity;
+import com.example.tijingwang.sunnyrainy.R;
+import com.example.tijingwang.sunnyrainy.helper.MusicConstant;
+import com.example.tijingwang.sunnyrainy.music.SpotifyAssembly;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +69,23 @@ public class FirstFragment extends Fragment {
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
 
+    @BindView(R.id.login_icon)
+    ImageView loginButton;
+    @BindView(R.id.play_icon)
+    ImageView playButton;
+    @BindView(R.id.pause_icon)
+    ImageView pauseButton;
+    @BindView(R.id.resume_icon)
+    ImageView resumeButton;
+    @BindView(R.id.skip_icon)
+    ImageView skipButton;
+    @BindView(R.id.like_icon)
+    ImageView likeButton;
+
+
+
+
+
     private Forecast mForecast;
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -71,6 +103,7 @@ public class FirstFragment extends Fragment {
 
 
 
+    @SuppressLint("WrongViewCast")
     public FirstFragment() {
         // Required empty public constructor
     }
@@ -100,6 +133,8 @@ public class FirstFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -110,7 +145,6 @@ public class FirstFragment extends Fragment {
         ButterKnife.bind(this, view);
         mProgressBar.setVisibility(View.INVISIBLE);
 
-
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +153,31 @@ public class FirstFragment extends Fragment {
         });
 
         getForecast();
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpotifyAssembly sa = new SpotifyAssembly();
+                sa.login(getActivity());
+            }
+
+        });
+
+        playButton.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
+        resumeButton.setVisibility(View.INVISIBLE);
+        skipButton.setVisibility(View.INVISIBLE);
+        likeButton.setVisibility(View.INVISIBLE);
+
+        if (MusicConstant.AccessToken != null) {
+            playButton.setVisibility(View.VISIBLE);
+            pauseButton.setVisibility(View.VISIBLE);
+            resumeButton.setVisibility(View.VISIBLE);
+            skipButton.setVisibility(View.VISIBLE);
+            likeButton.setVisibility(View.VISIBLE);
+
+            loginButton.setVisibility(View.INVISIBLE);
+        }
 
         return view;
 
