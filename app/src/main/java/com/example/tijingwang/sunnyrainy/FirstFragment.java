@@ -264,7 +264,7 @@ public class FirstFragment extends Fragment {
 
     }
 
-    private void nextSong() {
+    public void nextSong() {
         if(songList.size() == 0)
             return;
 

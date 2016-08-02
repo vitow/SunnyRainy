@@ -474,6 +474,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
         Log.d(TAG, "Playback event received: " + eventType.name());
+
+        if(eventType.name().equals("TRACK_END")) { // Jump to next song
+            //TODO: jump to next song
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//
+//            FirstFragment currentFragment = (FirstFragment)getActiveFragment();
+//            currentFragment.nextSong();
+        }
+    }
+
+    public Fragment getActiveFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return getSupportFragmentManager().findFragmentByTag(tag);
     }
 
     @Override

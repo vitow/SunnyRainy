@@ -53,8 +53,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/favor_song"
                 android:layout_alignTop="@+id/play_song"
                 android:layout_toLeftOf="@+id/play_song"
@@ -62,14 +62,14 @@
                 android:src="@drawable/ctrl_plus" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/play_song"
                 android:src="@drawable/ctrl_play" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/next_song"
                 android:layout_alignTop="@+id/play_song"
                 android:layout_toRightOf="@+id/play_song"

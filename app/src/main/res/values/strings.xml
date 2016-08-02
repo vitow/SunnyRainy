@@ -6,6 +6,11 @@
     <string name="favor_songs">Favorite Songs</string>
     <string name="logout">Log out</string>
 
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="error_title">Oops sorry</string>
     <string name="error_message">There was an error, please try again</string>
     <string name="error_ok_button">OK</string>
@@ -16,4 +21,6 @@
 
     <string name="spotify_client_id">be36ff5a78084c0c8c8af109cdbb284a</string>
     <string name="spotify_redirect_uri">sunny-rainy-app-login://callback</string>
+
+    <string name="title_activity_maps">Map</string>
 </resources>
