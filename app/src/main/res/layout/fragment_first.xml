@@ -4,8 +4,6 @@
              android:layout_height="match_parent"
              tools:context="com.example.tijingwang.sunnyrainy.FirstFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,53 +11,27 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="#1A237E">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/refreshImageView"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/refresh"
-            android:layout_centerHorizontal="true"/>
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Alcatraz Island, CA"
-            android:id="@+id/locationLabel"
-            android:layout_above="@+id/timeLabel"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:textSize="24sp"
-            android:textColor="@android:color/white" />
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/iconImageView"
-            android:layout_alignBottom="@+id/locationLabel"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_above="@+id/weatherLabel"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/cloudy_night" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="..."
-            android:id="@+id/timeLabel"
-            android:layout_above="@+id/temperatureLabel"
+            android:text="clear-day"
+            android:id="@+id/weatherLabel"
             android:layout_centerHorizontal="true"
-            android:textColor="#80FFFFFF"
-            android:textSize="18sp" />
-
+            android:layout_marginBottom="10dp"
+            android:textSize="45sp"
+            android:textColor="@android:color/white"
+            android:layout_above="@+id/temperatureLabel" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,138 +41,41 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
-            android:textSize="100sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/degreeImageView"
-            android:layout_alignTop="@+id/temperatureLabel"
-            android:layout_toRightOf="@+id/temperatureLabel"
-            android:layout_toEndOf="@+id/temperatureLabel"
-            android:src="@drawable/degree"
-            android:layout_marginTop="10dp" />
+            android:layout_marginBottom="50dp"
+            android:textSize="50sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:id="@+id/buttonsLayout"
             android:layout_below="@+id/temperatureLabel"
-            android:background="#f9f9fc">
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:id="@+id/favor_song"
+                android:layout_alignTop="@+id/play_song"
+                android:layout_toLeftOf="@+id/play_song"
+                android:layout_marginRight="50dp"
+                android:src="@drawable/ctrl_plus" />
 
-                android:paddingLeft="@dimen/fab_margin"
-                android:paddingRight="@dimen/fab_margin"
-                android:paddingBottom="@dimen/fab_margin"
-                android:paddingTop="@dimen/fab_margin"
-                android:background="#f9f9fc">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Track"
-                    android:id="@+id/track_text"
-                    android:layout_centerHorizontal="true"
-
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Artist"
-                    android:id="@+id/artist_text"
-                    android:layout_above="@+id/track_text"
-                    android:layout_centerHorizontal="true"
-
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#d3e8fc"
-                android:paddingTop="@dimen/icon_margin"
-                android:paddingBottom="@dimen/icon_margin"
-                android:paddingLeft="@dimen/icon_margin"
-                android:paddingRight="@dimen/icon_margin"
-                android:weightSum="3">
+                android:id="@+id/play_song"
+                android:src="@drawable/ctrl_play" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/next_song"
+                android:layout_alignTop="@+id/play_song"
+                android:layout_toRightOf="@+id/play_song"
+                android:layout_marginLeft="50dp"
+                android:src="@drawable/ctrl_next" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/play_icon"
-                            android:src="@drawable/play_icon" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/pause_icon"
-
-                            android:src="@drawable/pause_icon"
-                            android:layout_alignTop="@+id/play_icon"
-                            android:layout_alignBottom="@+id/play_icon"
-                            android:layout_alignLeft="@+id/play_icon" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/resume_icon"
-
-                            android:src="@drawable/play_icon"
-                            android:layout_alignTop="@+id/play_icon"
-                            android:layout_alignBottom="@+id/play_icon"
-                            android:layout_alignLeft="@+id/play_icon" />
-
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_weight="2"
-                    android:weightSum="2">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/skip_icon"
-                        android:layout_weight="1"
-                        android:layout_alignTop="@+id/play_icon"
-                        android:layout_toRightOf="@+id/play_icon"
-                        android:layout_toEndOf="@+id/play_icon"
-                        android:src="@drawable/skip_icon" />
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/like_icon"
-                        android:layout_weight="1"
-                        android:layout_alignTop="@+id/skip_icon"
-                        android:layout_toRightOf="@+id/skip_icon"
-                        android:layout_toEndOf="@+id/skip_icon"
-                        android:src="@drawable/like_icon" />
-
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,18 +1,32 @@
 package com.example.tijingwang.sunnyrainy;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.io.InputStream;
 
 
 /**
@@ -24,14 +38,7 @@ import com.facebook.login.widget.LoginButton;
  * create an instance of this fragment.
  */
 public class ThirdFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static final String TAG = ThirdFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -50,20 +57,13 @@ public class ThirdFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static ThirdFragment newInstance(String param1, String param2) {
         ThirdFragment fragment = new ThirdFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -71,30 +71,40 @@ public class ThirdFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_third, container, false);
-        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
-        // If using in a fragment
-        loginButton.setFragment(this);
-        // Other app specific specialization
 
-        // Callback registration
-        CallbackManager callbackManager = CallbackManager.Factory.create();
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
+        SharedPreferences pref = this.getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        String avatar = pref.getString("avatar", "");
+        if(!avatar.equals("")) {
+            ImageView avatarImg = (ImageView) view.findViewById(R.id.avatarImageView);
+            new ImageLoadTask(avatar, avatarImg).execute();
+        }
 
-            @Override
-            public void onCancel() {
-                // App code
-            }
+        String user_name = pref.getString("user_name", "");
+        if(!user_name.equals("")) {
+            TextView usernameTxtView = (TextView) view.findViewById(R.id.userNameLabel);
+            usernameTxtView.setText(user_name);
+        }
 
+        Button button = (Button) view.findViewById(R.id.logoutButton);
+        button.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onError(FacebookException exception) {
-                // App code
+            public void onClick(View v)
+            {
+                SharedPreferences pref = ThirdFragment.this.getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.remove("user_id");
+                editor.commit();
+
+                // Facebook logout
+                LoginManager.getInstance().logOut();
+
+                // Start LoginActivity
+                Intent intent = new Intent(ThirdFragment.this.getActivity(), LoginActivity.class);
+                startActivity(intent);
             }
         });
+
         return view;
     }
 

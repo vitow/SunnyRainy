@@ -1,6 +1,9 @@
 package com.example.tijingwang.sunnyrainy;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -105,15 +108,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -129,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+
+        SharedPreferences pref = this.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        int user_id = pref.getInt("user_id", 0);
+        if(user_id == 0) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
     }
 
@@ -321,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        ThirdFragment fragment3;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -337,7 +339,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 case 1:
                     return new SecondFragment();
                 case 2:
-                    return new ThirdFragment();
+                    if(fragment3 == null) {
+                        fragment3 = new ThirdFragment();
+                    }
+                    return fragment3;
                 default:
                     break;
             }
@@ -355,11 +360,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "MOOD";
+                    return "Mood";
                 case 1:
-                    return "FIND";
+                    return "Find";
                 case 2:
-                    return "PROFILE";
+                    return "Me";
             }
             return null;
         }

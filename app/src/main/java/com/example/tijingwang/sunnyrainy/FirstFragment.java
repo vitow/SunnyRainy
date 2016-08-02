@@ -40,19 +40,12 @@ import okhttp3.Response;
  */
 public class FirstFragment extends Fragment {
 
-
-    @BindView(R.id.timeLabel)
-    TextView mTimeLabel;
     @BindView(R.id.temperatureLabel)
     TextView mTemperatureLabel;
     @BindView(R.id.iconImageView)
     ImageView mIconImageView;
-    @BindView(R.id.refreshImageView)
-    ImageView mRefreshImageView;
-    @BindView(R.id.locationLabel)
-    TextView mLocationLabel;
-    @BindView(R.id.progressBar)
-    ProgressBar mProgressBar;
+    @BindView(R.id.weatherLabel)
+    TextView mWeatherLabel;
 
     private Forecast mForecast;
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -100,6 +93,8 @@ public class FirstFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //getForecast();
     }
 
     @Override
@@ -108,55 +103,37 @@ public class FirstFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first, container, false);
         ButterKnife.bind(this, view);
-        mProgressBar.setVisibility(View.INVISIBLE);
-
-
-        mRefreshImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getForecast();
-            }
-        });
-
-        getForecast();
 
         return view;
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            getForecast();
+        }
+    }
+
     private void getForecast() {
-        String apiKey = "ed8d8951a7633c7fda6840f1f0881a96";
-        String forecastUrl = "https://api.forecast.io/forecast/" + apiKey +
-                "/" + MainActivity.latitude + "," + MainActivity.longitude;
+        String apiPath = "weather?latitude=" + MainActivity.latitude + "&longitude=" + MainActivity.longitude;
+        String forecastUrl = getString(R.string.api_host) + apiPath;
         Log.d("tijingw", String.valueOf(MainActivity.getLatitude()));
         Log.d("tijingw", String.valueOf(MainActivity.getLongitude()));
 
         if (isNetworkAvailable()) {
-            toggleRefresh();
-
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(forecastUrl).build();
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            toggleRefresh();
-                        }
-                    });
                     alertUserAboutError();
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            toggleRefresh();
-                        }
-                    });
                     try {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
@@ -184,26 +161,14 @@ public class FirstFragment extends Fragment {
         }
     }
 
-    private void toggleRefresh() {
-        if(mProgressBar.getVisibility() == View.INVISIBLE) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mRefreshImageView.setVisibility(View.INVISIBLE);
-        } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mRefreshImageView.setVisibility(View.VISIBLE);
-        }
-    }
-
-
     private void updateDisplay() {
         Current current = mForecast.getCurrent();
-        mTemperatureLabel.setText(current.getTemperature() + "");
-        mTimeLabel.setText("At " + current.getFormattedTime() + " it will be");
+        int fahrenheit = current.getTemperature();
+        int celsius = (int)((float)(fahrenheit - 32 ) / 1.8f);
+        mTemperatureLabel.setText(celsius + "°C / " + fahrenheit + "°F");
         Drawable drawable = getResources().getDrawable(current.getIconID());
         mIconImageView.setImageDrawable(drawable);
-
-        String locationName = MainActivity.city + ", " + MainActivity.state;
-        mLocationLabel.setText(locationName);
+        mWeatherLabel.setText(current.getIcon());
     }
 
     private Forecast parseForecastDetails(String jsonData) throws JSONException {
@@ -215,8 +180,7 @@ public class FirstFragment extends Fragment {
 
     private Current getCurrentDetails(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
-        String timezone = forecast.getString("timezone");
-        JSONObject currently = forecast.getJSONObject("currently");
+        JSONObject currently = forecast.getJSONObject("result");
         Current current = new Current();
         current.setHumidity(currently.getDouble("humidity"));
         current.setTime(currently.getLong("time"));
@@ -224,9 +188,6 @@ public class FirstFragment extends Fragment {
         current.setPrecipChance(currently.getDouble("precipProbability"));
         current.setSummary(currently.getString("summary"));
         current.setTemperature(currently.getDouble("temperature"));
-        current.setTimeZone(timezone);
-
-        Log.d(TAG, current.getFormattedTime());
 
         return current;
     }
