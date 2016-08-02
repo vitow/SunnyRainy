@@ -94,6 +94,7 @@ public class ThirdFragment extends Fragment {
                 SharedPreferences pref = ThirdFragment.this.getActivity().getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.remove("user_id");
+                editor.remove("spotify_token");
                 editor.commit();
 
                 // Facebook logout

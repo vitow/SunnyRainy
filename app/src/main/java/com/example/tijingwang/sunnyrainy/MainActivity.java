@@ -37,13 +37,31 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.PlayerNotificationCallback;
+import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.Spotify;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, FirstFragment.OnFragmentInteractionListener, SecondFragment.OnFragmentInteractionListener, ThirdFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        FirstFragment.OnFragmentInteractionListener,
+        SecondFragment.OnFragmentInteractionListener,
+        ThirdFragment.OnFragmentInteractionListener,
+        PlayerNotificationCallback, ConnectionStateCallback {
+
+    // Request code that will be used to verify if the result comes from correct activity
+    private static final int REQUEST_CODE = 2050;
+    private Player mPlayer;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -64,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int REQUEST_LOCATION = 2;
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String SPOTIFY_TOKEN = "spotify_token";
     public static Location mLastLocation;
     private LocationRequest mLocationRequest;
 
@@ -129,6 +148,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if(user_id == 0) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else { // Login to Spotify if necessary
+            String spotifyToken = pref.getString(SPOTIFY_TOKEN, "");
+            if(spotifyToken.equals("")) {
+                AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(getString(R.string.spotify_client_id),
+                        AuthenticationResponse.Type.TOKEN,
+                        getString(R.string.spotify_redirect_uri));
+                builder.setScopes(new String[]{"user-read-private", "streaming"});
+                AuthenticationRequest request = builder.build();
+                AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+            } else { // Init the player directly
+                initPlayer(spotifyToken);
+            }
         }
 
     }
@@ -368,5 +399,91 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
             return null;
         }
+    }
+
+    /**
+     * Spotify callbacks.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        // Check if result comes from the correct activity
+        if (requestCode == REQUEST_CODE) {
+            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+                // Store the spotify_token
+                SharedPreferences pref = MainActivity.this.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString(SPOTIFY_TOKEN, response.getAccessToken());
+                editor.commit();
+
+                initPlayer(response.getAccessToken());
+            }
+        }
+    }
+
+    public Player getSpotifyPlayer() {
+        return mPlayer;
+    }
+
+    public void initPlayer(String token) {
+        Spotify.destroyPlayer(this);
+
+        Config playerConfig = new Config(this, token, getString(R.string.spotify_client_id));
+        Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
+            @Override
+            public void onInitialized(Player player) {
+                mPlayer = player;
+                mPlayer.addConnectionStateCallback(MainActivity.this);
+                mPlayer.addPlayerNotificationCallback(MainActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onLoggedIn() {
+        Log.d(TAG, "User logged in");
+    }
+
+    @Override
+    public void onLoggedOut() {
+        Log.d(TAG, "User logged out");
+    }
+
+    @Override
+    public void onLoginFailed(Throwable error) {
+        Log.d(TAG, "Login failed");
+    }
+
+    @Override
+    public void onTemporaryError() {
+        Log.d(TAG, "Temporary error occurred");
+    }
+
+    @Override
+    public void onConnectionMessage(String message) {
+        Log.d(TAG, "Received connection message: " + message);
+    }
+
+    @Override
+    public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
+        Log.d(TAG, "Playback event received: " + eventType.name());
+    }
+
+    @Override
+    public void onPlaybackError(ErrorType errorType, String errorDetails) {
+        Log.d(TAG, "Playback error received: " + errorType.name());
+    }
+
+    @Override
+    protected void onDestroy() {
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
     }
 }

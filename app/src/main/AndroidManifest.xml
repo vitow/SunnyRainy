@@ -30,6 +30,10 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- Needed for Spotify LoginActivity to work -->
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity android:name=".LoginActivity"></activity>
     </application>
 
