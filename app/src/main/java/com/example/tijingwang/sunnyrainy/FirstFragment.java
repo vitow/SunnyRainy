@@ -313,7 +313,7 @@ public class FirstFragment extends Fragment {
             // Delete Favor mark, but keep the song in the server
             SharedPreferences.Editor editor = pref.edit();
             String song_uri = songList.get(curSongIdx).get("uri");
-            String uniq_id =  pref.getString("user_id", "") + "-" + song_uri;
+            String uniq_id =  "" + pref.getInt("user_id", 0) + "-" + song_uri;
             editor.remove(uniq_id);
             editor.commit();
 
