@@ -85,6 +85,17 @@ public class ThirdFragment extends Fragment {
             usernameTxtView.setText(user_name);
         }
 
+        Button btnFavorites = (Button) view.findViewById(R.id.songListButton);
+        btnFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                // Start LoginActivity
+                Intent intent = new Intent(ThirdFragment.this.getActivity(), FavoritesActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button button = (Button) view.findViewById(R.id.logoutButton);
         button.setOnClickListener(new View.OnClickListener()
         {

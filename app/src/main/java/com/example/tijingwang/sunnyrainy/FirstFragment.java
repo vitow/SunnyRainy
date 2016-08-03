@@ -71,7 +71,7 @@ public class FirstFragment extends Fragment {
     private boolean userClickPause = false;
     private ArrayList<HashMap<String, String>> songList;
     private Forecast mForecast;
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = FirstFragment.class.getSimpleName();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -144,6 +144,10 @@ public class FirstFragment extends Fragment {
                 playPauseSong();
             }
         });
+        if(curSongIdx != -1 && !userClickPause) { // It's playing something, init it
+            mPlaySong.setImageResource(R.drawable.ctrl_pause);
+        }
+
         mNextSong.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -233,6 +237,8 @@ public class FirstFragment extends Fragment {
                     String jsonData = response.body().string();
                     Log.v(TAG, jsonData);
                     if (response.isSuccessful()) {
+                        songList.clear();
+
                         JSONObject obj = new JSONObject(jsonData);
                         JSONArray items = obj.getJSONObject("tracks").getJSONArray("items");
                         for(int i=0; i<items.length(); i++) {
@@ -248,7 +254,9 @@ public class FirstFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                nextSong();
+                                if(curSongIdx == -1) { // Only play it in the first load
+                                    nextSong();
+                                }
                             }
                         });
                     } else {
@@ -277,6 +285,7 @@ public class FirstFragment extends Fragment {
         Player player = ((MainActivity)getActivity()).getSpotifyPlayer();
         if(player != null) {
             player.play(song_uri);
+            mPlaySong.setImageResource(R.drawable.ctrl_pause);
         }
 
         // Check Favor mark

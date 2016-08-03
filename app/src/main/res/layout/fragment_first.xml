@@ -21,7 +21,6 @@
             android:layout_marginBottom="20dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/cloudy_night" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +28,7 @@
             android:id="@+id/weatherLabel"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:textSize="45sp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
             android:layout_above="@+id/temperatureLabel" />
 

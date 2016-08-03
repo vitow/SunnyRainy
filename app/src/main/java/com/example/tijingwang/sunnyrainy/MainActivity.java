@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         PlayerNotificationCallback, ConnectionStateCallback {
 
     // Request code that will be used to verify if the result comes from correct activity
+    public static final int PICK_SONG_REQUEST = 1989;  // The request code
+
     private static final int REQUEST_CODE = 2050;
     private Player mPlayer;
 
@@ -175,32 +177,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         super.onPause();
         if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -228,14 +207,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 //                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
 //                        REQUEST_LOCATION);
 //            }
-            Log.d("tijingw", "Not permitted");
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
         } else {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation == null) {
-                Log.d("tijingw", "123");
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
             } else {
                 handleNewLocation(mLastLocation);
@@ -258,11 +235,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
             }
         }
-
-
-        Log.d("tijingw", "Changed to be permitted");
-
-
     }
 
 
@@ -307,6 +279,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
+        if(mLastLocation != null) {
+            setLatitude(mLastLocation.getLatitude());
+            setLongitude(mLastLocation.getLongitude());
+
+            Log.d(TAG, "location changed: " + getLatitude() + ", " + getLongitude());
+        }
     }
 
     private void handleNewLocation(Location location) {
@@ -421,6 +399,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 initPlayer(response.getAccessToken());
             }
         }
+    }
+
+    public void updateLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION);
+        } else {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    public GoogleApiClient getGoogleApiClient() {
+        return mGoogleApiClient;
     }
 
     public Player getSpotifyPlayer() {
